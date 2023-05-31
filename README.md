@@ -3,7 +3,7 @@
 
 # 开发中，敬请期待
 
-# License [LICENSE](LICENSE)
+# [License](LICENSE)
 ```
 Turing Box - An Android System Tools Box based on JetPack Compose UI
 https://github.com/lumyuan/TuringBox
