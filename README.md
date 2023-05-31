@@ -1,9 +1,9 @@
 # TuringBox
 一个基于<a href="https://developer.android.google.cn/courses/pathways/compose">JetPack Compose UI</a>构建的安卓玩机盒子
 
-# 开发中，敬请期待
+## 开发中，敬请期待
 
-# [License](LICENSE)
+## [License](LICENSE)
 ```
 Turing Box - An Android System Tools Box based on JetPack Compose UI
 https://github.com/lumyuan/TuringBox
