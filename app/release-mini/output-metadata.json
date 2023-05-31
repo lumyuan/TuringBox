@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "io.github.lumyuan.turingbox",
+  "variantName": "release-mini",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 23053121,
+      "versionName": "0.0.1-23053121",
+      "outputFile": "Turing Box-0.0.1-23053121-release-mini.apk"
+    }
+  ],
+  "elementType": "File"
+}

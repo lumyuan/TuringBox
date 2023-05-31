@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Turing Box</string>
+    <string name="page_function">功能</string>
+    <string name="page_device">设备</string>
+    <string name="page_mine">我的</string>
+    <string name="float_monitor_tip">悬浮监听器</string>
+    <string name="power_radio_tip">电源选项</string>
+    <string name="settings_tip">设置</string>
+    <string name="text_memory">内存</string>
+    <string name="text_ram">物理内存</string>
+    <string name="text_swap">交换分区</string>
+</resources>
