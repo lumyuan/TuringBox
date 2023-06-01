@@ -86,7 +86,6 @@ fun ContentView() {
             NavigationView(pagerState, titles)
         }
     )
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

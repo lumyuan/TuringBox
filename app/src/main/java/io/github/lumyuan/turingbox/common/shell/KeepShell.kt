@@ -1,37 +1,41 @@
 package io.github.lumyuan.turingbox.common.shell
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.OutputStream
 import java.nio.charset.Charset
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 
-class KeepShell(private var rootMode: Boolean = true) {
+/**
+ * Created by Hello on 2018/01/23.
+ */
+public class KeepShell(private var rootMode: Boolean = true) {
     private var p: Process? = null
     private var out: OutputStream? = null
     private var reader: BufferedReader? = null
     private var currentIsIdle = true // 是否处于闲置状态
-    val isIdle: Boolean
+    public val isIdle: Boolean
         get() {
             return currentIsIdle
         }
 
     //尝试退出命令行程序
-     fun tryExit() {
+    public fun tryExit() {
         try {
-            out?.close()
-            reader?.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            if (out != null)
+                out!!.close()
+            if (reader != null)
+                reader!!.close()
+        } catch (ex: Exception) {
         }
         try {
-            p?.destroy()
-        } catch (e: Exception) {
-            e.printStackTrace()
+            p!!.destroy()
+        } catch (ex: Exception) {
         }
         enterLockTime = 0L
         out = null
@@ -41,19 +45,21 @@ class KeepShell(private var rootMode: Boolean = true) {
     }
 
     //获取ROOT超时时间
+    private val GET_ROOT_TIMEOUT = 20000L
     private val mLock = ReentrantLock()
     private val LOCK_TIMEOUT = 10000L
     private var enterLockTime = 0L
 
     private var checkRootState =
+            // "if [[ \$(id -u 2>&1) == '0' ]] || [[ \$(\$UID) == '0' ]] || [[ \$(whoami 2>&1) == 'root' ]] || [[ \$(\$USER_ID) == '0' ]]; then\n" +
             "if [[ \$(id -u 2>&1) == '0' ]] || [[ \$(\$UID) == '0' ]] || [[ \$(whoami 2>&1) == 'root' ]] || [[ \$(set | grep 'USER_ID=0') == 'USER_ID=0' ]]; then\n" +
                     "  echo 'success'\n" +
                     "else\n" +
                     "if [[ -d /cache ]]; then\n" +
-                    "  echo 1 > /cache/turing_root\n" +
-                    "  if [[ -f /cache/turing_root ]] && [[ \$(cat /cache/turing_root) == '1' ]]; then\n" +
+                    "  echo 1 > /cache/vtools_root\n" +
+                    "  if [[ -f /cache/vtools_root ]] && [[ \$(cat /cache/vtools_root) == '1' ]]; then\n" +
                     "    echo 'success'\n" +
-                    "    rm -rf /cache/turing_root\n" +
+                    "    rm -rf /cache/vtools_root\n" +
                     "    return\n" +
                     "  fi\n" +
                     "fi\n" +
@@ -62,8 +68,8 @@ class KeepShell(private var rootMode: Boolean = true) {
                     "fi\n"
 
     fun checkRoot(): Boolean {
-        val r = doCmdSync(checkRootState).lowercase()
-        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r == "not found") {
+        val r = doCmdSync(checkRootState).toLowerCase(Locale.getDefault())
+        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r.equals("not found")) {
             if (rootMode) {
                 tryExit()
             }
@@ -80,36 +86,37 @@ class KeepShell(private var rootMode: Boolean = true) {
 
     private fun getRuntimeShell() {
         if (p != null) return
-        val getSu = Thread {
+        val getSu = Thread(Runnable {
             try {
                 mLock.lockInterruptibly()
                 enterLockTime = System.currentTimeMillis()
                 p = if (rootMode) ShellExecutor.getSuperUserRuntime() else ShellExecutor.getRuntime()
-                out = p?.outputStream
-                reader = p?.inputStream?.bufferedReader()
+                out = p!!.outputStream
+                reader = p!!.inputStream.bufferedReader()
                 if (rootMode) {
                     out?.run {
                         write(checkRootState.toByteArray(Charset.defaultCharset()))
                         flush()
                     }
                 }
-                Thread {
+                Thread(Runnable {
                     try {
-                        val errorReader = p?.errorStream?.bufferedReader()
+                        val errorReader =
+                                p!!.errorStream.bufferedReader()
                         while (true) {
-                            Log.e("KeepShellPublic", errorReader?.readLine() ?: "")
+                            Log.e("KeepShellPublic", errorReader.readLine())
                         }
                     } catch (ex: Exception) {
                         Log.e("c", "" + ex.message)
                     }
-                }.start()
+                }).start()
             } catch (ex: Exception) {
                 Log.e("getRuntime", "" + ex.message)
             } finally {
                 enterLockTime = 0L
                 mLock.unlock()
             }
-        }
+        })
         getSu.start()
         getSu.join(10000)
         if (p == null && getSu.state != Thread.State.TERMINATED) {
@@ -127,7 +134,7 @@ class KeepShell(private var rootMode: Boolean = true) {
     private val endTagBytes = "\necho '$endTag'\n".toByteArray(Charset.defaultCharset())
 
     //执行脚本
-    fun doCmdSync(cmd: String): String {
+    public fun doCmdSync(cmd: String): String {
         if (mLock.isLocked && enterLockTime > 0 && System.currentTimeMillis() - enterLockTime > LOCK_TIMEOUT) {
             tryExit()
             Log.e("doCmdSync-Lock", "线程等待超时${System.currentTimeMillis()} - $enterLockTime > $LOCK_TIMEOUT")
@@ -140,7 +147,7 @@ class KeepShell(private var rootMode: Boolean = true) {
             currentIsIdle = false
 
             out?.run {
-                CoroutineScope(Dispatchers.IO).launch {
+                GlobalScope.launch(Dispatchers.IO) {
                     write(startTagBytes)
                     write(cmd.toByteArray(Charset.defaultCharset()))
                     write(endTagBytes)
@@ -148,9 +155,9 @@ class KeepShell(private var rootMode: Boolean = true) {
                 }
             }
 
-            var upstart = true
-            while (reader != null) {
-                val line = reader?.readLine()
+            var unstart = true
+            while (true && reader != null) {
+                val line = reader!!.readLine()
                 if (line == null) {
                     break
                 } else if (line.contains(endTag)) {
@@ -159,12 +166,14 @@ class KeepShell(private var rootMode: Boolean = true) {
                 } else if (line.contains(startTag)) {
                     shellOutputCache.clear()
                     shellOutputCache.append(line.substring(line.indexOf(startTag) + startTag.length))
-                    upstart = false
-                } else if (!upstart) {
+                    unstart = false
+                } else if (!unstart) {
                     shellOutputCache.append(line)
                     shellOutputCache.append("\n")
                 }
             }
+            // Log.e("shell-unlock", cmd)
+            // Log.d("Shell", cmd.toString() + "\n" + "Result:"+results.toString().trim())
             return shellOutputCache.toString().trim()
         }
         catch (e: Exception) {

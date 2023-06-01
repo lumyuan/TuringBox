@@ -36,6 +36,7 @@ fun PreviewIndicator() {
 
 /**
  * 弧形进度条
+ * @author lumyuan
  */
 @Composable
 fun IndicatorComponent(

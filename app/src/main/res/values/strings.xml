@@ -1,4 +1,496 @@
 <resources>
+
+    <string name="require_restart_app">需要重启应用才能生效</string>
+
+    <integer name="opacity">0</integer>
+
+    <string name="format_hh_mm">%02d:%02d</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_not_now">回头再说</string>
+    <string name="btn_delete">删除</string>
+    <string name="btn_dontshow">不再显示</string>
+    <string name="btn_confirm">确定</string>
+    <string name="btn_no">否</string>
+    <string name="btn_yes">是</string>
+    <string name="btn_continue">继续</string>
+    <string name="btn_modify_confirm">确认修改</string>
+    <string name="btn_help">帮助</string>
+    <string name="btn_iknow">知道了</string>
+    <string name="btn_exit">退出</string>
+    <string name="btn_hide">隐藏</string>
+    <string name="btn_resume">恢复</string>
+    <string name="btn_skip">跳过</string>
+    <string name="btn_retry">重试</string>
+    <string name="btn_apply">应用</string>
+    <string name="btn_reboot">重启</string>
+    <string name="btn_resume_selected">恢复选中</string>
+    <string name="error_su_timeout">等待超时，请确保你的Root管理器正在后台运行，并重试！\n\n请确保你没有阻止“授权管理器(SuperSu、Magisk Manager等)”自启动，并允许后台弹出窗口、显示悬浮窗等权限。如果一直没有弹出授权对话框，建议重启手机再试！\n</string>
+
+    <string name="error_root">抱歉，没有获取到ROOT权限</string>
+    <string name="error_root_desc">没有ROOT权限，将失去许多特色功能。\n如果你错过了授权提示，或未看到弹窗，请找到你的ROOT管理器，手动设置允许Turing Box使用ROOT权限~</string>
+    <string name="question_install_busybox">安装Busybox吗？</string>
+    <string name="question_install_busybox_desc">你的手机似乎没有安装busybox，这会导致Turing Box无法使用，是否要立即安装（需要修改System）？</string>
+
+    <string name="share_link">你也来试试Turing Box吧，我觉得还不错，下载地址：\n https://www.github.com/lumyuan/TuringBox</string>
+    <!--<string name="feedback_link">mqqwpa://im/chat?chat_type=wpa&amp;uin=1191634433</string>-->
+
+    <string name="app_name_short">Turing Box</string>
+    <string name="app_name_mode_switch">Turing Box-快速切换模式</string>
+
+    <string name="accessibility_service_description">Turing Box增强服务\n你需要激活本服务，才能使用以下功能：\n\n1.动态响应（根据前台应用自动调整性能）.\n\n2.自动行为（在开关屏幕时切换网络或切换应用时回收进程）.\n\n3.自动安装（安装第三方应用时自动点击下一步）</string>
+
+    <string name="backup_action_title_boot">导出Boot</string>
+    <string name="backup_action_desc_boot">备份当前使用中的Boot为img，复制到/sdcard/boot.img</string>
+    <string name="restore_action_title_boot">刷入Boot</string>
+    <string name="restore_action_desc_boot">选择刷入boot.img</string>
+
+    <string name="backup_action_title_rec">导出Recovery</string>
+    <string name="backup_action_desc_rec">备份当前使用中的导出Recovery为img，复制到/sdcard/recovery.img</string>
+    <string name="restore_action_title_rec">刷入Recovery</string>
+    <string name="restore_action_desc_rec">选择刷入recovery.img</string>
+
+    <string name="backup_action_title_dtbo">导出DTBO分区</string>
+    <string name="backup_action_desc_dtbo">导出DTBO分区为img镜像，复制到/sdcard/dtbo.img</string>
+    <string name="restore_action_title_dtbo">刷入DTBO镜像</string>
+    <string name="restore_action_desc_dtbo">选择刷入dtbo.img</string>
+
+    <string name="backup_action_title_persist">导出Persist分区</string>
+    <string name="backup_action_desc_persist">导出Persist分区为img镜像，复制到/sdcard/persist.img</string>
+    <string name="restore_action_title_persist">刷入Persist镜像</string>
+    <string name="restore_action_desc_persist">选择刷入persist.img</string>
+
+    <string name="backup_file_exists">覆盖文件？</string>
+    <string name="backup_img_exists">/sdcard/%s.img已经存在，是否覆盖已有文件？\n</string>
+    <string name="backup_space_small">存储空间不足，请至少预留200M可用空间！</string>
+
+    <string name="autobooster_tab_details">黑名单设置</string>
+    <string name="autobooster_tab_system_turing_box">系统场景</string>
+    <string name="auto_clear_ignore_chager">充电状态忽略</string>
+    <string name="auto_clear_ignore_chager_desc">充电状态下，息屏动作延迟到充电完成才执行</string>
+
+    <string name="settings_disable_selinux">SeLinux宽容模式</string>
+    <string name="settings_disable_selinux_desc">将SELinux切换到宽容模式(部分软件叫[关闭Selinux])，SeLinux状态对Turing Box没有任何影响，并且开启宽容模式可能会死机重启！</string>
+    <string name="settings_theme">主题</string>
+    <string name="settings_theme_wallpaper">使用壁纸</string>
+    <string name="settings_theme_wallpaper_desc">使用系统壁纸作为窗口背景，显示为半透明界面</string>
+    <string name="settings_debug_layer">调试窗口</string>
+    <string name="settings_debug_layer_desc">显示Turing Box判定前台应用过程的日志</string>
+    <string name="settings_help_icon">提示图标</string>
+    <string name="settings_help_icon_desc">在功能项旁边显示功能说明提示（问号）图标</string>
+    <string name="settings_auto_exit">异常时自动退出</string>
+    <string name="settings_auto_exit_desc">运行过程出现异常时自动结束进程，避免卡死白屏</string>
+    <string name="settings_logcat_title">错误日志</string>
+    <string name="settings_logcat_desc">当Turing Box发生错误闪退时，点击下面的按钮通过logcat抓取日志，发送给开发者以便解决问题</string>
+    <string name="settings_black_notification">黑色通知背景</string>
+    <string name="settings_black_notification_desc">系统处于夜间模式时，将Turing Box的常驻通知显示为黑色背景(正常情况无需开启此选项)</string>
+
+    <string name="menu_home">概况</string>
+    <string name="menu_paypal">捐赠打赏</string>
+    <string name="menu_turing_box_mode">场景模式</string>
+    <string name="menu_app_turing_box">应用场景</string>
+    <string name="menu_system_turing_box">系统场景</string>
+    <string name="menu_auto_click">自动点击</string>
+    <string name="menu_cpu_modes">性能配置</string>
+    <string name="menu_freeze">应用偏见</string>
+    <string name="menu_battery_stats">耗电统计</string>
+    <string name="menu_core_control">CPU 控制</string>
+    <string name="menu_sundry">杂项设置</string>
+    <string name="menu_additional">附加功能</string>
+    <string name="menu_applictions">应用管理</string>
+    <string name="menu_swap">SWAP设置</string>
+    <string name="menu_battery">充电控制</string>
+    <string name="menu_charge">充电统计</string>
+    <string name="menu_custom_command">自定义命令</string>
+    <string name="menu_processes">进程管理</string>
+    <string name="menu_fps_chart">帧率记录</string>
+    <string name="menu_app_magisk">Magisk助手</string>
+    <string name="menu_gesture">手势导航</string>
+    <string name="menu_xposed_app">应用设置</string>
+    <string name="menu_xposed_global">全局设置</string>
+    <string name="menu_filter">屏幕滤镜</string>
+    <string name="menu_img">备份还原</string>
+    <string name="menu_qq">吹牛扯淡</string>
+    <string name="menu_menu_title">反馈交流</string>
+    <string name="menu_share">分享应用</string>
+    <string name="menu_miui_thermal">MIUI温控</string>
+
+    <string name="system">系统</string>
+
+    <string name="accessibility_running">辅助服务已激活</string>
+    <string name="accessibility_stoped">点击此处去激活辅助服务</string>
+
+    <string name="battery_title">电池：</string>
+    <string name="battery_title_desc1">如需使用“充电调速”、“充电保护”功能，请务必保持Turing Box后台运行！</string>
+    <string name="battery_reality_limit">实际上限电流：</string>
+    <string name="battery_pd_allowed">USB-PD快充</string>
+    <string name="battery_pd_allowed_desc">手机会根兼容情况决定是否激活USB-PD充电，无需手动设置。手动开关会导致充电速度缓慢，因此不允许手动修改！</string>
+    <string name="battery_pd_active_state">当前状态：</string>
+    <string name="battery_pd_active_1">已进入PD快充模式</string>
+    <string name="battery_pd_active_0">未进入PD快充模式</string>
+    <string name="battery_auto_boot_desc">OK，如果你要手机重启后自动开启本功能，请允许Turing Box开机自启！</string>
+    <string name="battery_qc_rehoot_desc">充电加速服务已禁用，可能需要重启手机才能恢复默认设置！</string>
+    <string name="battery_pd_active_unknown">未知</string>
+    <string name="battery_uevent_title">$ bms/uevent</string>
+    <string name="battery_usb_uevent_title">$ usb/uevent</string>
+    <string name="battery_night_mode_time">%02d:%02d</string>
+    <string name="battery_night_mode">动态充电速度</string>
+    <string name="battery_night_mode_desc">在接近充满时调至缓慢充电\n\n并在夜间主动降低充电速度</string>
+    <string name="battery_time_get_up">起床时间</string>
+    <string name="battery_time_sleep">入睡时间</string>
+    <string name="battery_manual_control">手动控制</string>
+    <string name="battery_charge_disable">禁止充电</string>
+    <string name="battery_charge_resume">恢复充电</string>
+    <string name="battery_usage_history">电池使用记录</string>
+    <string name="battery_view_history">查看记录</string>
+    <string name="battery_delete_history">删除记录</string>
+    <string name="battery_bp">充电保护</string>
+    <string name="battery_bp_desc">达到指定电量后停止充电\n\n注意：长期使用可能导致电量显示失准</string>
+    <string name="battery_bp_level_desc">电量限制值（%）</string>
+    <string name="battery_qc_charger">充电调速</string>
+    <string name="battery_bp_status">达到%d%%停止充电，低于%d%%恢复</string>
+    <string name="battery_qc_charger_desc">调整充电速度限制。疯狂调高毫无意义，因为并不会取得实际效果，请在有效范围内调节数值\n\n注意：上限数值仅供参考，请以实际充电速度为准！</string>
+    <string name="battery_charge_disabled">充电功能已禁止！</string>
+    <string name="battery_charge_resumed">充电功能已恢复！</string>
+    <string name="battery_forgery">数据伪装</string>
+    <string name="battery_forgery_ratio">电池电量</string>
+    <string name="battery_forgery_full_now">充满容量</string>
+    <string name="battery_step_charge">阶梯式充电</string>
+    <string name="battery_step_charge_desc">系统根据电量分阶段调整充电速度上限，有助于保护电池寿命\n\n一般建议保持默认设置</string>
+    <string name="battery_exec_option">充电调速目的</string>
+    <string-array name="battery_exec_options">
+        <item>降低速度</item>
+        <item>加速充电</item>
+        <item>往死里充</item>
+    </string-array>
+    <string name="battery_exec_desc">Turing Box会根据你的选择在不同时机执行速度变更，具体差异如下\n\n降低速度：只在充电器连接和电量百分比变化时重新设置充电速度\n加速充电：电池状态发生变化、充电器连接时重新设置充电速度\n往死里充：在[充电加速]的逻辑基础上，每秒自动重新设置充电速度</string>
+
+    <string name="battery_status_discharging">【未充电】</string>
+    <string name="battery_status_charging">【充电中】</string>
+    <string name="battery_status_full">【已充满】</string>
+    <string name="battery_status_not_charging">【未充电】</string>
+    <string name="battery_status_unknown">【状态未知】</string>
+    <string name="battery_status_sum">（大约充入 %smAh）</string>
+    <string name="electricity_unit_adj">电流单位校准</string>
+    <string name="electricity_unit_adj_desc">当前充电速度，除以：</string>
+    <string name="electricity_unit_as">显示为：</string>
+    <string name="electricity_unit_adj_desc2">充电应显示为正数，放电应显示为负数</string>
+
+    <string name="applist_warn">目前所提供的应用数据备份功能，需要系统集成busybox、toybox，使用tar+gz压缩数据（如果系统支持，将使用pigz提高压缩速度），仅备份 “/data/data/应用包名” 下的数据，且不保证兼容所有系统和应用。\n\n应用备份文件在 /sdcard/backups/apps（Android 11+系统不支持备份功能）</string>
+    <string name="dialog_addin_device_warn">机型信息请不要输入特殊符号！\n已兼容【应用变量】模块的机型代码，复制后重新打开此窗口即可使用！</string>
+    <string name="dialog_addin_device_desc">修改后可点击“还原”->“确认”恢复修改前的机型，卸载Turing Box会导致备份的机型信息丢失，请务必还原后再卸载！\n\n或者，你也可以通过重新刷入完整ROM来恢复机型信息！\n\n使用DualBootPatcher多系统软件切勿使用本功能修改机型！！！</string>
+    <string name="dialog_addin_device_inner">预设模板</string>
+    <string name="title_activity_shortcut">快捷启动</string>
+    <string name="title_activity_freeze">应用偏见</string>
+    <string name="title_activity_online">Turing Box-Online</string>
+
+    <string name="shortcut_disabled">暂不可用</string>
+    <string name="shortcut_p1">省电模式</string>
+    <string name="shortcut_p1_long">性能配置-省电</string>
+    <string name="shortcut_p2">均衡模式</string>
+    <string name="shortcut_p2_long">性能配置-均衡</string>
+    <string name="shortcut_p3">性能模式</string>
+    <string name="shortcut_p3_long">性能配置-性能</string>
+    <string name="shortcut_p4">极速模式</string>
+    <string name="shortcut_p4_long">性能配置-极速</string>
+    <string name="device_unsupport">该功能暂不支持您的设备！</string>
+
+    <string name="addin_fullscreen_on">沉浸式体验</string>
+    <string name="addin_fullscreen_on_desc">自动隐藏状态栏、导航栏</string>
+    <string name="addin_flyme_static_blur">减少Flyme6模糊</string>
+    <string name="addin_flyme_static_blur_desc">禁用Flyme6下拉通知中心的实时模糊效果，以减少魅族低端机在游戏或视频播放时下拉通知中心的卡顿，或许还能省电，需要重启。</string>
+    <string name="addin_miui_hide_search">MIUI9去通知中心搜索</string>
+    <string name="addin_miui_hide_search_desc">默认隐藏MIUI9系统下拉通知中心的搜索框，重启后生效</string>
+    <string name="addin_dpi">DPI、分辨率修改</string>
+    <string name="addin_dpi_desc">自定义手机DPI或分辨率，可能导致设备无法正常启动，或UI错误</string>
+    <string name="addin_deviceinfo">机型修改</string>
+    <string name="addin_deviceinfo_desc">通过更改build.prop伪装机型，部分手机可能会无法开机或出现Bug</string>
+    <string name="addin_mac">修改MAC地址（方案1）</string>
+    <string name="addin_mac_desc">自定义手机WIFI网卡MAC地址，仅支持部分设备</string>
+    <string name="addin_mac_2">修改MAC地址（方案2）</string>
+    <string name="addin_mac_desc_2">自定义手机WIFI网卡MAC地址，仅支持部分设备，比较适合Android Q</string>
+    <string name="addin_force_dex_compile">强制dex2oat编译</string>
+    <string name="addin_force_dex_compile_desc">对应用进行dex2oat编译，降低运行时的CPU和RAM占用。编译过程可能需要半个小时，系统更新后需要重新编译！</string>
+    <string name="addin_dexopt_helpinfo">在Android N以后，为了减少应用空间占用和提高安装效率，在安装应用时不再对dex进行完整编译，导致运行速度下降。通过本功能选中“编译”将在安装应用时使用speed模式进行编译，安装速度显著变慢，但是运行时更加流畅(提升约20%，对游戏帧率无提升！)。\n\n以Oreo系统下斗鱼TV客户端为例，全新安装时base.odex仅为6.8MB，编译后增大到103MB。\n\n但国内许多应用采用热更新技术，运行时经常需要从服务器下载最新代码并解析渲染，这是这些应用启动慢或启动后卡顿的主要原因。因此dex2oat编译并不能为这类应用带来明显的性能提升！</string>
+    <string name="addin_dex2oat_helplink">https://source.android.com/devices/tech/dalvik/jit-compiler?hl=zh-cn</string>
+    <string name="addin_pm_dexopt">应用安装dex2oat策略</string>
+    <string name="addin_pm_dexopt_desc">适用于Android N+，调整PackageManager应用安装时的dex2oat编译策略，更新系统后需要重新设置</string>
+    <string name="addin_wifi">查看保存的WIFI</string>
+    <string name="addin_wifi_desc">解析/data/misc/wifi目录下的wpa_supplicant.conf或WifiConfigStore.xml</string>
+    <string name="addin_bpc">Performance Boost Config精简</string>
+    <string name="addin_bpc_desc">关闭Performance Boost Config中的一些选项，避免CPU频繁被拉高频率造成耗电，但保留应用启动升频，会略微降低体验。需要重启！</string>
+    <string name="addin_continue">继续</string>
+
+    <string name="swap_on_close">正在关闭SWAP，这可能很慢</string>
+    <string name="swap_current_state">当前状态：</string>
+    <string name="swap_memory_info">Memory Info</string>
+    <string name="swap_vmstat">VM Stat</string>
+    <string name="swap_io">SWAP IO</string>
+    <string name="swap_swappiness_desc">说明：\n数值越高会越积极的使用SWAP，此设置对流畅度的影响难以感知，酌情调整即可~</string>
+    <string name="swap_swappiness">Swappiness</string>
+    <string name="swap_zram">ZRAM</string>
+    <string name="swap_zram_adjustment">调整</string>
+    <string name="swap_zram_desc">说明： ZRAM是SWAP的一种实现。可用内存变得不足时，会对内存中的部分数据进行压缩。但CPU会因此变得繁忙~</string>
+    <string name="swap_zram_comp_options">压缩算法</string>
+    <string name="swap_zram_comp_algorithm_wran">更改未生效</string>
+    <string name="swap_zram_comp_algorithm_wran_desc">ZRAM正在使用中，现在无法更改压缩算法。\n\n如需让设置生效，请点击下方的“调整”按钮</string>
+    <string name="swap_swap">Swapfile</string>
+    <string name="swap_create">创建</string>
+    <string name="swap_start">启动</string>
+    <string name="swap_stop">关闭</string>
+    <string name="swap_delete">删除</string>
+    <string name="swap_zram_preferred">用完ZRAM再使用</string>
+    <string name="swap_zram_equitable">与ZRAM同时使用</string>
+    <string name="swap_swap_preferred">优先于ZRAM使用</string>
+    <string name="swap_use_loop">挂载为回环设备</string>
+    <string name="swap_use_loop_desc">如果不开启此项也能正常使用SWAP，就没必要开。\n\n除非是无法启动SWAP，或启动SWAP后手机死机，才需要开启此选项！\n\n例如：小米的SDM845机型在Android9.0，需要勾选此项才能正常使用SWAP</string>
+    <string name="swap_swap_desc">说明： Swapfile类似于Windows的虚拟内存，交换效率受限于磁盘性能。请勿在小容量或空间不足的手机上使用此功能，以防闪存老化过快！</string>
+    <string name="swap_auto_start">开机自启(要允许Turing Box自启动)</string>
+    <string name="swap_auto_start_desc">注意：你需要允许Turing Box自启动，下次开机才会生效！</string>
+    <string name="swap_zram_stat">ZRAM 状态</string>
+    <string name="swap_outside_module">外部附加(Magisk)模块</string>
+    <string name="swap_outside_module_desc">您已安装Magisk框架，建议使用附加模块最新版本增强SWAP控制的可靠性，附加主要作用如下：</string>
+    <string name="swap_outside_effect1">1.提高手机重启后还原ZRAM、Swapfile设置的速度</string>
+    <string name="swap_outside_effect2">2.根据设备RAM容量调整LMK参数，加强后台留存能力</string>
+    <string name="swap_outside_effect3">3.调整VM参数，提高ZRAM、Swapfile使用积极性</string>
+    <string name="swap_module_install_desc">模块下载后，请自行在Magisk Manager中刷入,并重启手机！</string>
+    <string name="swap_zram_stat_desc">ZRAM的压缩率通常在20~45%之间</string>
+    <string name="swap_zram_stat_format">数据压缩算法：%s\n原始数据大小：%s\n压缩后的大小：%s\n物理内存占用：%s\n最高内存占用：%s\n内存占用限制：%s\n压缩率　　　：%s</string>
+    <string name="swap_zram_stat_format2">数据压缩算法：%s\n原始数据大小：%s\n压缩后的大小：%s\n压缩率　　　：%s</string>
+    <string name="swap_zram_writback_stat">ZRAM Writeback\n回写块：%s\n已回写：%dMB\n总读取：%dMB\n总回写：%dMB</string>
+    <string name="swap_zram_compact_algorithm">压缩算法</string>
+    <string name="swap_state_undefined">未创建</string>
+    <string name="swap_state_created">未启动</string>
+    <string name="swap_state_using">使用中</string>
+    <string name="extra_free_kbytes">extra_free_kbytes(KB)</string>
+    <string name="extra_free_kbytes_desc">此值指定Linux内核会额外保留多少物理内存，当内存不足时会立即开始压缩内存到SWAP/ZRAM，在可用内存回升到合理范围之前设备会明显变得缓慢\n\n简单地说extra_free_kbytes设置越大，则内存回收(swap或杀死进程)越积极，但不建议设置过大，以免浪费物理内存而加重磁盘/处理器负担！</string>
+    <string name="watermark_scale_factor">watermark_scale_factor</string>
+    <string name="watermark_scale_factor_desc">数值范围为0~1000，其中1000表示10%，表示内存水位线low/min/high三个数值之间各相差(物理RAM容量的)10%。\n\n例如(我的手机)：\npageSize=4KB\nmanaged=1951743(pages)\nmin_free_kbytes=10900(KB)\nwatermark_scale_factor=500\n\n此时min值为\n10900(KB)/4(PageSize)=2725(pages)\nlow值大约是\n1951743*5%+2725≈100312(pages)\nhigh值大约是\n1951743*10%+2725≈197899(pages)\n注：最终的low、high值，可能受extra_free_kbytes影响而偏大\n\n这个例子中，\nmin=2725=10MB\nlow=100312≈392MB\nhigh=197899≈773MB\n\n意味着，内存低于392M便会开始回收内存，直到可用内存高于773MB~</string>
+
+    <string name="on_execute_please_wait">正在执行操作，请稍等…</string>
+    <string name="please_wait">请稍等…</string>
+    <string name="executed">操作已完成！</string>
+    <string name="file_creating">创建文件中</string>
+    <string name="zram_resizing">正在调整，请耐心等候…</string>
+    <string name="priority">优先级</string>
+    <string name="order">顺序</string>
+    <string name="used">已用</string>
+    <string name="size">大小</string>
+    <string name="type">类型</string>
+    <string name="path">路径</string>
+    <string name="battery_low">电量过低，请及时充电！</string>
+    <string name="sorry">抱歉</string>
+    <string name="powersave">省电模式</string>
+    <string name="balance">均衡模式</string>
+    <string name="performance">性能模式</string>
+    <string name="fast">极速模式</string>
+    <string name="powersave_short">省电</string>
+    <string name="balance_short">均衡</string>
+    <string name="performance_short">性能</string>
+    <string name="fast_short">极速</string>
+    <string name="app_selected_none">一个应用也没有选中！</string>
+    <string name="help">帮助</string>
+    <string name="warn">警告</string>
+    <string name="more">了解更多</string>
+    <string name="not_support_config">未找到可用的模式配置脚本</string>
+    <string name="not_support_config_desc">应用没有自带适用于你手机的性能配置脚本。你可以选择“在线获取脚本”看看是否有适于你手机的配置可供下载，或选择“了解更多”查看自定义配置教程！</string>
+    <string name="first_start_select_config">首次使用，先选择配置偏好</string>
+    <string name="config_online_options">选择在线脚本库</string>
+    <string name="online_config_v1">yc9559定制v1</string>
+    <string name="online_config_v2">yc9559定制v2</string>
+
+    <string name="config_installed">配置安装成功！</string>
+    <string name="ro_product_model">ro.product.model=</string>
+    <string name="ro_product_brand">ro.product.brand=</string>
+    <string name="ro_product_name">ro.product.name=</string>
+    <string name="ro_product_device">ro.product.device=</string>
+    <string name="ro_product_manufacturer">ro.product.manufacturer=</string>
+    <string name="auto_start">自启动</string>
+    <string name="boot_after_auto_modify">开机后自动修改</string>
+    <string name="core_control_helpinfo">部分手机具有CPU参数动态调整机制，会导致自定义的参数很快失效，此外，温控也会限制你调高CPU频率。</string>
+    <string name="shell_executor">脚本执行</string>
+    <string-array name="default_powercfg_mode_options">
+        <item>省电模式</item>
+        <item>均衡模式</item>
+        <item>性能模式</item>
+        <item>极速模式</item>
+    </string-array>
+    <string-array name="sleep_powercfg_mode_options">
+        <item>省电模式</item>
+        <item>均衡模式</item>
+        <item>性能模式</item>
+        <item>保持状态</item>
+    </string-array>
+    <string-array name="powercfg_modes_filter">
+        <item>全部</item>
+        <item>省电</item>
+        <item>均衡</item>
+        <item>性能</item>
+        <item>极速</item>
+        <item>全局默认</item>
+        <item>保持状态</item>
+    </string-array>
+    <string-array name="powercfg_apptype_filter">
+        <item>用户</item>
+        <item>系统</item>
+        <item>全部</item>
+    </string-array>
+
+    <string name="cgroup_mem_title">cgroup</string>
+    <string-array name="cgroup_mem_options">
+        <item>系统默认</item>
+        <item>普通应用</item>
+        <item>优先内存</item>
+        <item>重要进程</item>
+        <item>受限后台</item>
+        <item>回收内存</item>
+    </string-array>
+    <string-array name="cgroup_mem_values">
+        <item></item>
+        <item>turing_box_lock</item>
+        <item>turing_box_perf</item>
+        <item>turing_box_fg</item>
+        <item>turing_box_bg</item>
+        <item>turing_box_cache</item>
+    </string-array>
+
+    <string name="title_activity_timing_task">定时任务</string>
+    <string name="title_activity_trigger">触发器</string>
+    <string name="title_activity_file_selector">请选择文件</string>
+    <string name="title_activity_folder_selector">请长按选择目录</string>
+    <string name="config_save_fail">配置保存失败！</string>
+    <string name="boot_success">已完成开机自启动</string>
+    <string name="notice_channel_boot">自启动提示</string>
+    <string name="notice_channel_task">Turing Box计划任务</string>
+    <string name="notice_task_completed">Turing Box计划任务完成</string>
+    <string name="boot_script_running">正在执行自启动脚本…</string>
+    <string name="boot_cpuset">设置CPU控制参数…</string>
+    <string name="boot_modify_mac">修改MAC地址…</string>
+    <string name="boot_charge_booster">开启充电加速…</string>
+    <string name="boot_use_powercfg">应用调度配置…</string>
+    <string name="boot_resize_zram">设置ZRAM容量…</string>
+    <string name="boot_swapon">启动SWAP…</string>
+    <string name="boot_lmk">调整LMK参数…</string>
+    <string name="boot_freeze">冻结偏见应用…</string>
+
+    <string name="flash_confirm">确认刷入？</string>
+
+    <string name="turing_box_addin_miss">高级设定 组件缺失</string>
+    <string name="turing_box_addin_miss_desc">请从Turing Box下载安装“Turing Box-高级设定”，并将其设为允许后台自启动！</string>
+    <string name="turing_box_addin_sync_fail">从“Turing Box-高级设定”组件同步Xposed设定失败！</string>
+    <string name="turing_box_install_autoclick">安装点击</string>
+    <string name="turing_box_install_autoclick_desc">安装第三方应用时，自动帮你点“下一步”和“安装”</string>
+    <string name="turing_box_install_skip_ad">跳过广告</string>
+    <string name="turing_box_install_skip_ad_desc">自动点击“跳过”按钮，可帮你自动跳过一些开屏广告，但会降低系统性能且存在误点现象\n* 只在简体中文下使用才有较好的效果</string>
+    <string name="turing_box_install_skip_ad_precise">跳过广告+</string>
+    <string name="turing_box_install_skip_ad_precise_desc">使用云端记录的一些按钮数据，来点击特殊的跳过按钮</string>
+    <string name="turing_box_install_skip_ad_warn">广告流量是一些软件开发者/商的重要收入来源，如果你的时间不是非常紧迫，那么建议您浏览并点击你喜欢的广告内容^_^</string>
+    <string name="perf_opt">动态响应</string>
+    <string name="permission_modify_fail">修改权限失败！</string>
+    <string name="turing_box_need_write_sys_settings">请先授权允许Turing Box“修改系统设置”！</string>
+    <string name="start_app_fail">启动应用失败！</string>
+    <string name="turing_box_need_notic_listing">请先授权允许Turing Box“通知使用权限”！</string>
+
+    <string name="turing_box_create_shortcut_action">io.github.lumyuan.turingbox.CreateShortcut</string>
+    <string name="turing_box_speed_compile">io.github.lumyuan.turingbox.SpeedCompile</string>
+    <string name="turing_box_speed_profile_compile">io.github.lumyuan.turingbox.SpeedProfileCompile</string>
+    <string name="turing_box_everything_compile">io.github.lumyuan.turingbox.EverythingCompile</string>
+    <string name="turing_box_reset_compile">io.github.lumyuan.turingbox.ResetCompile</string>
+
+    <string name="turing_box_contract_title">风险声明</string>
+    <string name="turing_box_contract">Turing Box是一款面向玩机爱好者的应用，使用它需要拥有优秀的视力、阅读理解能力和良好的心态。\n\n使用过程中可能出现无法预料的错误，导致数据丢失，甚至无法正常开机。\n\n请务必不要在你[用于工作]或者存有[重要数据]的手机上使用，以免造成损失！\n\n使用过程中，务必仔细阅读提示信息谨慎操作，不要轻易拨动不理解的功能选项！\n\n此外，本应用作者不保证会提供使用帮助和故障恢复建议！</string>
+    <string name="permission_float">请先为Turing Box授权显示悬浮窗权限！</string>
+    <string name="lmk_optimize_desc">让Turing Box根据你的RAM容量，自动调整LMK参数，从而增强后台能力（可能导致低内存时卡顿）。如需恢复，请关闭该选项重启手机，如需开机后自动设置，请允许工具箱自启动</string>
+    <string name="lmk_optimize">低内存优化</string>
+    <string name="low_memory_killer">Low Memory Killer</string>
+    <string name="busybox_nonsupport">Turing Box集成的Busybox不支持你当前系统，请自己下载并安装Busybox</string>
+    <string name="dex2oat_completed">dex2oat编译完成</string>
+    <string name="dex2oat_compiling">dex2oat编译中</string>
+    <string name="dex2oat_reset_running">dex2oat重置中</string>
+
+    <string name="freeze_shortcut_lost">快捷方式丢失</string>
+    <string name="freeze_shortcut_lost_desc">以下被加入偏见模式的应用，启动快捷方式已丢失或未创建成功，是否立即重新创建？</string>
+    <string name="freeze_disable_completed">已冻结应用 ×</string>
+    <string name="freeze_enable_completed">已解冻应用 √</string>
+    <string name="freeze_shortcut_add_success">创建完成</string>
+    <string name="freeze_shortcut_add_fail">创建失败</string>
+    <string name="freeze_batch_add">批量添加快捷方式</string>
+    <string name="freeze_batch_add_wran">批量添加快捷方式可能会失败，你可以长按应用图标，发送单个快捷方式到桌面！</string>
+    <string name="freeze_entrance_changed">√ 图标显示状态已切换</string>
+    <string name="freeze_shortcut_delete_desc">你可能需要手动删除已添加的快捷方式！</string>
+    <string name="wallpaper_rw_permission">需要“读写本地存储”的权限才能使用系统壁纸作为软件背景</string>
+
+    <string name="shortcut_create_fail">快捷方式创建失败</string>
+    <string name="shortcut_create_success">已发送创建快捷方式申请</string>
+    <string name="shortcut_create">添加快捷方式</string>
+    <string name="shortcut_create_desc">你希望将“%s”添加到桌面，方便快速使用吗？</string>
+    <string name="ushortcut_nsupported">该功能不支持添加快捷方式</string>
+    <string name="btn_copy_output">复制输出</string>
+    <string name="copy_success">复制成功</string>
+    <string name="copy_fail">复制失败</string>
+    <string name="promote_link">https://tinyurl.com/y3j7vszf</string>
+
+    <string name="kr_write_external_storage">需要读写外置存储权限</string>
+    <string name="kr_page_before_load">准备解析配置</string>
+    <string name="kr_page_loading">解析配置中</string>
+    <string name="kr_page_after_load">配置解析完成</string>
+    <string name="kr_page_sh_invalid">无效的页面配置输出</string>
+    <string name="kr_page_sh_file_permission">指定的配置文件不存在或无读取权限</string>
+    <string name="kr_page_load_fail">页面加载失败</string>
+    <string name="kr_page_load_success">页面加载成功</string>
+    <string name="kr_auto_run_item_losted">指定项已丢失</string>
+
+    <string name="magisk_install_desc">Turing Box对系统的大部分修改操作，现在都可以通过Magisk模块的形式进行了。但是，你先要同意Turing Box在你的手机上自动安装附加模块，并重启手机（建议）！</string>
+    <string name="magisk_install_title">Turing Box附加模块</string>
+    <string name="cache_recycle">回收缓存</string>
+    <string name="dynamic_auto_disabled">未检测到配置文件，已自动禁用动态响应！</string>
+    <string name="app_donate">打赏</string>
+    <string name="app_nav">功能</string>
+    <string name="app_home">概览</string>
+
+    <string name="system_turing_box_next_task">下一个任务</string>
+    <string name="system_turing_box_resume_charge">恢复充电</string>
+    <string name="system_turing_box_battery_left">电量低于</string>
+    <string name="system_turing_box_battery_right">电量高于</string>
+    <string name="system_turing_box_stop_charge">停止充电</string>
+    <string name="system_turing_box_task_canceled">任务已取消</string>
+    <string name="system_turing_box_timing_task">我的定时任务</string>
+    <string name="system_turing_box_trigger">我的触发器</string>
+
+
+    <string-array name="process_sort_modes">
+        <item>按CPU</item>
+        <item>按RES</item>
+        <item>按PID</item>
+        <item>不排序</item>
+    </string-array>
+    <string-array name="process_filter">
+        <item>普通应用</item>
+        <item>系统应用</item>
+        <item>所有应用</item>
+        <item>其它进程</item>
+        <item>所有类型</item>
+    </string-array>
+
+    <string-array name="start_dir_options">
+        <!--<item>/data/adb/modules/turing_box_systemless/vendor/etc</item>
+        <item>/data/thermal/config</item>
+        <item>/data/vendor/thermal/config</item>
+        <item>/data/adb/modules</item>-->
+        <item>/sdcard</item>
+        <item>/system/etc</item>
+        <item>/vendor/etc</item>
+    </string-array>
+
+
+    <string name="power_shutdown_cmd">sync;svc power shutdown || reboot -p;</string>
+    <string name="power_reboot_cmd">sync;svc power reboot || reboot;</string>
+    <string name="power_hot_reboot_cmd">sync;am restart || busybox killall system_server;</string>
+    <string name="power_fastboot_cmd">sync;reboot bootloader;</string>
+    <string name="power_recovery_cmd">sync;reboot recovery;</string>
+    <string name="power_emergency_cmd">sync;reboot edl;</string>
+    <string name="miui_thermal_desc">点击右上角的菜单，选择并编辑温控文件，编辑完成后点击保存~\n\n注意：随着安卓系统不断更新，要修改系统分区变得越来越困难，可能修改无法成功保存，或重启后即被自动还原，建议使用magisk模块来完成温控修改！\n\n温控文件一般是在/system/etc或/vendor/etc目录下，名称以“thermal”开头，后缀为“.conf”</string>
+    <string name="monitor_process_unsupported">进程管理器暂未兼容你的手机！</string>
+
     <string name="app_name">Turing Box</string>
     <string name="page_function">功能</string>
     <string name="page_device">设备</string>
@@ -9,4 +501,19 @@
     <string name="text_memory">内存</string>
     <string name="text_ram">物理内存</string>
     <string name="text_swap">交换分区</string>
+    <string name="title_activity_checker">CheckerActivity</string>
+    <string name="text_permission_checking">正在检查所必须权限</string>
+    <string name="no_float_window_permission">Turing Box未获得显示悬浮窗权限</string>
+    <string name="please_arrow_update_system_permission">\"请为Turing Box授予“修改系统设置”权限，以确保“场景模式”功能能正常运行！\"</string>
+    <string name="charging_pause">充电保护策略已为您暂停充电！</string>
+    <string name="charging_resume">充电保护策略已为您恢复充电！</string>
+    <string name="text_permission_pass">权限校验成功！</string>
+    <string name="text_root_fail">抱歉，没有获取到ROOT权限</string>
+    <string name="text_root_fail_tips">没有ROOT权限，将失去许多特色功能。 如果你错过了授权提示，或未看到弹窗，请找到你的ROOT管理器，手动设置允许Turing Box使用ROOT权限~</string>
+    <string name="kill_self">退出软件</string>
+    <string name="continue_to_use">继续使用</string>
+    <string name="cancel_use">还是算了</string>
+    <string name="agreen_danger">同意风险和协议</string>
+    <string name="agreen_danger_tips">我已了解并愿意承担风险和协议</string>
+    <string name="please_arrow_danger">请先同意协议</string>
 </resources>
