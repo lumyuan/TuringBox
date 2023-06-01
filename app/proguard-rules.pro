@@ -19,3 +19,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepclassmembers public class * extends android.app.Activity
+-keepclassmembers public class * extends android.app.Application
+-keepclassmembers public class * extends android.app.Service
+-keepclassmembers public class * extends android.content.BroadcastReceiver
+-keepclassmembers class * extends java.io.Serializable{*;}
+-keepclassmembers class * implements java.io.Serializable{*;}
+#-keepclassmembers public class * extends android.content.ContentProvider
+#-keepclassmembers public class * extends android.app.backup.BackupAgentHelper
+#-keepclassmembers public class * extends android.preference.Preference
+#-keepclassmembers public class * extends android.view.View
+#-keepclassmembers public class com.android.vending.licensing.ILicensingService
+#-keepclassmembers class android.support.** {*;}
+
+-keep class io.github.lumyuan.turingbox.common.model.**{*;}
