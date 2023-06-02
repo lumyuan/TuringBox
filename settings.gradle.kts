@@ -30,4 +30,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "TuringBox"
 include(":app")
- 
+include(":TuringBoxJNI")

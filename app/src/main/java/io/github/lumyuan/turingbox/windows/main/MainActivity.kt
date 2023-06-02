@@ -21,8 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -31,14 +29,22 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lumyuan.turingbox.R
 import io.github.lumyuan.turingbox.ui.compose.setContentUI
+import io.github.lumyuan.turingbox.ui.icon.NiaIcons
+import io.github.lumyuan.turingbox.ui.widget.NiaNavigationBar
+import io.github.lumyuan.turingbox.ui.widget.NiaNavigationBarItem
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -51,24 +57,38 @@ class MainActivity : ComponentActivity() {
 }
 
 @Stable
-data class BottomItemData(var title: String, var painter: Painter)
+data class BottomItemData(var title: String, var painter: ImageVector, var selectPainter: ImageVector)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ContentView() {
 
+    val icons = listOf(
+        NiaIcons.UpcomingBorder,
+        NiaIcons.BookmarksBorder,
+        NiaIcons.Grid3x3,
+    )
+    val selectedIcons = listOf(
+        NiaIcons.Upcoming,
+        NiaIcons.Bookmarks,
+        NiaIcons.Grid3x3,
+    )
+
     val titles = listOf(
         BottomItemData(
             stringResource(id = R.string.page_function),
-            painter = painterResource(id = R.drawable.ic_nav_function)
+            painter = icons[2],
+            selectPainter = selectedIcons[2]
         ),
         BottomItemData(
             stringResource(id = R.string.page_device),
-            painter = painterResource(id = R.drawable.ic_home)
+            painter = icons[0],
+            selectPainter = selectedIcons[0]
         ),
         BottomItemData(
             stringResource(id = R.string.page_mine),
-            painter = painterResource(id = R.drawable.icon_mine_fill)
+            painter = icons[1],
+            selectPainter = selectedIcons[1]
         )
     )
 
@@ -179,50 +199,58 @@ fun ViewPager(
 fun NavigationView(pagerState: PagerState, titles: List<BottomItemData>) {
     val scope = rememberCoroutineScope()
 
-    NavigationBar {
-        titles.onEachIndexed { index, bottomItemData ->
-            val selected = index == pagerState.currentPage
-
-            //动画时长
-            val durationMillis = 400
-            //插值器
-            val animationSpec =
-                TweenSpec<Color>(durationMillis = durationMillis, easing = FastOutLinearInEasing)
-
-            val tint by animateColorAsState(
-                targetValue = if (selected)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.primary.copy(alpha = .5f),
-                animationSpec = animationSpec,
-                label = "tint"
-            )
-
-            NavigationBarItem(
-                alwaysShowLabel = false,
-                selected = selected,
+    NiaNavigationBar(
+        modifier = Modifier.testTag("NiaBottomBar")
+    ) {
+        titles.forEachIndexed { index, item ->
+            NiaNavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = item.painter,
+                        contentDescription = item.title,
+                    )
+                },
+                selectedIcon = {
+                    Icon(
+                        imageVector = item.selectPainter,
+                        contentDescription = item.title,
+                    )
+                },
+                label = {
+                    Text(text = item.title)
+                },
+                selected = index == pagerState.currentPage,
                 onClick = {
                     scope.launch {
                         pagerState.scrollToPage(index)
                     }
                 },
-                icon = {
-                    Icon(
-                        painter = bottomItemData.painter,
-                        contentDescription = bottomItemData.title,
-                        modifier = Modifier.size(
-                            Icons.Filled.Home.defaultWidth,
-                            Icons.Filled.Home.defaultHeight
-                        ),
-                        tint = tint
-                    )
-                },
-                label = {
-                    Text(
-                        text = (bottomItemData.title)
-                    )
-                }
             )
         }
     }
+}
+
+private fun Modifier.notificationDot(): Modifier =
+    composed {
+        val tertiaryColor = MaterialTheme.colorScheme.tertiary
+        drawWithContent {
+            drawContent()
+            drawCircle(
+                tertiaryColor,
+                radius = 5.dp.toPx(),
+                // This is based on the dimensions of the NavigationBar's "indicator pill";
+                // however, its parameters are private, so we must depend on them implicitly
+                // (NavigationBarTokens.ActiveIndicatorWidth = 64.dp)
+                center = center + Offset(
+                    64.dp.toPx() * .45f,
+                    32.dp.toPx() * -.45f - 6.dp.toPx(),
+                ),
+            )
+        }
+    }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewContentUI() {
+    ContentView()
 }

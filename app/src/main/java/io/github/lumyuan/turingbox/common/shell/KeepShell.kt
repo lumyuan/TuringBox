@@ -1,10 +1,12 @@
 package io.github.lumyuan.turingbox.common.shell
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.OutputStream
 import java.nio.charset.Charset
 import java.util.*
@@ -31,11 +33,13 @@ public class KeepShell(private var rootMode: Boolean = true) {
                 out!!.close()
             if (reader != null)
                 reader!!.close()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         try {
             p!!.destroy()
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         enterLockTime = 0L
         out = null
@@ -68,8 +72,8 @@ public class KeepShell(private var rootMode: Boolean = true) {
                     "fi\n"
 
     fun checkRoot(): Boolean {
-        val r = doCmdSync(checkRootState).toLowerCase(Locale.getDefault())
-        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r.equals("not found")) {
+        val r = doCmdSync(checkRootState).lowercase()
+        return if (r == "error" || r.contains("permission denied") || r.contains("not allowed") || r == "not found") {
             if (rootMode) {
                 tryExit()
             }
@@ -86,11 +90,12 @@ public class KeepShell(private var rootMode: Boolean = true) {
 
     private fun getRuntimeShell() {
         if (p != null) return
-        val getSu = Thread(Runnable {
+        val getSu = Thread {
             try {
                 mLock.lockInterruptibly()
                 enterLockTime = System.currentTimeMillis()
-                p = if (rootMode) ShellExecutor.getSuperUserRuntime() else ShellExecutor.getRuntime()
+                p =
+                    if (rootMode) ShellExecutor.getSuperUserRuntime() else ShellExecutor.getRuntime()
                 out = p!!.outputStream
                 reader = p!!.inputStream.bufferedReader()
                 if (rootMode) {
@@ -99,24 +104,24 @@ public class KeepShell(private var rootMode: Boolean = true) {
                         flush()
                     }
                 }
-                Thread(Runnable {
+                Thread {
                     try {
                         val errorReader =
-                                p!!.errorStream.bufferedReader()
+                            p!!.errorStream.bufferedReader()
                         while (true) {
                             Log.e("KeepShellPublic", errorReader.readLine())
                         }
                     } catch (ex: Exception) {
                         Log.e("c", "" + ex.message)
                     }
-                }).start()
+                }.start()
             } catch (ex: Exception) {
                 Log.e("getRuntime", "" + ex.message)
             } finally {
                 enterLockTime = 0L
                 mLock.unlock()
             }
-        })
+        }
         getSu.start()
         getSu.join(10000)
         if (p == null && getSu.state != Thread.State.TERMINATED) {
@@ -134,7 +139,7 @@ public class KeepShell(private var rootMode: Boolean = true) {
     private val endTagBytes = "\necho '$endTag'\n".toByteArray(Charset.defaultCharset())
 
     //执行脚本
-    public fun doCmdSync(cmd: String): String {
+    fun doCmdSync(cmd: String): String {
         if (mLock.isLocked && enterLockTime > 0 && System.currentTimeMillis() - enterLockTime > LOCK_TIMEOUT) {
             tryExit()
             Log.e("doCmdSync-Lock", "线程等待超时${System.currentTimeMillis()} - $enterLockTime > $LOCK_TIMEOUT")
@@ -147,16 +152,20 @@ public class KeepShell(private var rootMode: Boolean = true) {
             currentIsIdle = false
 
             out?.run {
-                GlobalScope.launch(Dispatchers.IO) {
+                CoroutineScope(Dispatchers.IO).launch {
                     write(startTagBytes)
                     write(cmd.toByteArray(Charset.defaultCharset()))
                     write(endTagBytes)
-                    flush()
+                    try {
+                        flush()
+                    }catch (e: IOException){
+                        e.printStackTrace()
+                    }
                 }
             }
 
             var unstart = true
-            while (true && reader != null) {
+            while (reader != null) {
                 val line = reader!!.readLine()
                 if (line == null) {
                     break
@@ -172,13 +181,14 @@ public class KeepShell(private var rootMode: Boolean = true) {
                     shellOutputCache.append("\n")
                 }
             }
-            // Log.e("shell-unlock", cmd)
-            // Log.d("Shell", cmd.toString() + "\n" + "Result:"+results.toString().trim())
+//             Log.e("shell-unlock", cmd)
+//             Log.d("Shell", cmd.toString() + "\n" + "Result:"+results.toString().trim())
             return shellOutputCache.toString().trim()
         }
         catch (e: Exception) {
+            e.printStackTrace()
             tryExit()
-            Log.e("KeepShellAsync", "" + e.message)
+            Log.e("KeepShellAsync", "" + e)
             return "error"
         } finally {
             enterLockTime = 0L

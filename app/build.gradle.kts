@@ -38,7 +38,7 @@ android {
         @SuppressLint("ExpiredTargetSdkVersion")
         targetSdk = 28
         versionCode = appVersionCode.toInt()
-        versionName = "0.0.1-$appVersionCode"
+        versionName = "0.0.2-$appVersionCode"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -122,11 +122,13 @@ dependencies {
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
     implementation(libs.android.appcompat)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.constraint.layout)
     implementation(platform(libs.compose.bom))
     testImplementation(libs.junit)
@@ -140,4 +142,6 @@ dependencies {
 
     implementation(libs.immersionbar.ui)
     implementation(libs.immersionbar.ui.ktx)
+
+    implementation(project(":TuringBoxJNI"))
 }

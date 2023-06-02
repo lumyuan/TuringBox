@@ -516,4 +516,6 @@
     <string name="agreen_danger">同意风险和协议</string>
     <string name="agreen_danger_tips">我已了解并愿意承担风险和协议</string>
     <string name="please_arrow_danger">请先同意协议</string>
+    <string name="text_gpu">GPU</string>
+    <string name="text_gpu_used">负载：%d%s</string>
 </resources>

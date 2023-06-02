@@ -10,12 +10,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlin.coroutines.CoroutineContext
 
 /**
  * 协程定时器
  */
-fun launchTimerJob(intervalMillis: Long, action: suspend (CoroutineScope) -> Unit): Job =
-    CoroutineScope(Dispatchers.IO).launch {
+fun launchTimerJob(scopeContext: CoroutineContext = Dispatchers.IO, intervalMillis: Long, action: suspend (CoroutineScope) -> Unit): Job =
+    CoroutineScope(scopeContext).launch {
         while (isActive) {
             action(this)
             delay(intervalMillis)
