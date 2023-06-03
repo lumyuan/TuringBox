@@ -153,10 +153,10 @@ public class KeepShell(private var rootMode: Boolean = true) {
 
             out?.run {
                 CoroutineScope(Dispatchers.IO).launch {
-                    write(startTagBytes)
-                    write(cmd.toByteArray(Charset.defaultCharset()))
-                    write(endTagBytes)
                     try {
+                        write(startTagBytes)
+                        write(cmd.toByteArray(Charset.defaultCharset()))
+                        write(endTagBytes)
                         flush()
                     }catch (e: IOException){
                         e.printStackTrace()

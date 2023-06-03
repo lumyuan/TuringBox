@@ -4,19 +4,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,13 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -45,6 +42,7 @@ import io.github.lumyuan.turingbox.ui.compose.setContentUI
 import io.github.lumyuan.turingbox.ui.icon.NiaIcons
 import io.github.lumyuan.turingbox.ui.widget.NiaNavigationBar
 import io.github.lumyuan.turingbox.ui.widget.NiaNavigationBarItem
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -117,42 +115,7 @@ fun TopBar(pagerState: PagerState) {
             Text(text = stringResource(id = R.string.app_name))
         },
         actions = {
-            AnimatedVisibility(visible = pagerState.currentPage == 1) {
-                Row {
-                    IconButton(
-                        onClick = {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.float_monitor_tip),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_graph),
-                            contentDescription = stringResource(id = R.string.float_monitor_tip),
-                            tint = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.size(26.dp)
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.power_radio_tip),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_power),
-                            contentDescription = stringResource(id = R.string.power_radio_tip),
-                            tint = MaterialTheme.colorScheme.onBackground,
-                            modifier = Modifier.size(26.dp)
-                        )
-                    }
-                }
-            }
+            Actions(pagerState = pagerState)
             IconButton(
                 onClick = {
                     Toast.makeText(
@@ -171,6 +134,53 @@ fun TopBar(pagerState: PagerState) {
             }
         }
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RowScope.Actions(pagerState: PagerState) {
+    val context = LocalContext.current
+    val isShow by remember {
+        derivedStateOf {
+            pagerState.currentPage == 1
+        }
+    }
+    AnimatedVisibility(visible = isShow) {
+        Row {
+            IconButton(
+                onClick = {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.float_monitor_tip),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_graph),
+                    contentDescription = stringResource(id = R.string.float_monitor_tip),
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
+            IconButton(
+                onClick = {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.power_radio_tip),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_power),
+                    contentDescription = stringResource(id = R.string.power_radio_tip),
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -198,36 +208,49 @@ fun ViewPager(
 @Composable
 fun NavigationView(pagerState: PagerState, titles: List<BottomItemData>) {
     val scope = rememberCoroutineScope()
-
     NiaNavigationBar(
         modifier = Modifier.testTag("NiaBottomBar")
     ) {
         titles.forEachIndexed { index, item ->
-            NiaNavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = item.painter,
-                        contentDescription = item.title,
-                    )
-                },
-                selectedIcon = {
-                    Icon(
-                        imageVector = item.selectPainter,
-                        contentDescription = item.title,
-                    )
-                },
-                label = {
-                    Text(text = item.title)
-                },
-                selected = index == pagerState.currentPage,
-                onClick = {
-                    scope.launch {
-                        pagerState.scrollToPage(index)
-                    }
-                },
-            )
+            NavigationItem(index, item, pagerState, scope)
         }
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RowScope.NavigationItem(
+    index: Int,
+    item: BottomItemData,
+    pagerState: PagerState,
+    scope: CoroutineScope
+) {
+    val selected by remember {
+        derivedStateOf { pagerState.currentPage == index }
+    }
+    NiaNavigationBarItem(
+        icon = {
+            Icon(
+                imageVector = item.painter,
+                contentDescription = item.title,
+            )
+        },
+        selectedIcon = {
+            Icon(
+                imageVector = item.selectPainter,
+                contentDescription = item.title,
+            )
+        },
+        label = {
+            Text(text = item.title)
+        },
+        selected = selected,
+        onClick = {
+            scope.launch {
+                pagerState.scrollToPage(index)
+            }
+        },
+    )
 }
 
 private fun Modifier.notificationDot(): Modifier =

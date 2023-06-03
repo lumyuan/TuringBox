@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
 /**
  * 协程定时器
  */
-fun launchTimerJob(scopeContext: CoroutineContext = Dispatchers.IO, intervalMillis: Long, action: suspend (CoroutineScope) -> Unit): Job =
+fun launchTimerJob(scopeContext: CoroutineContext = Dispatchers.IO, intervalMillis: Long = 1500, action: suspend (CoroutineScope) -> Unit): Job =
     CoroutineScope(scopeContext).launch {
         while (isActive) {
             action(this)

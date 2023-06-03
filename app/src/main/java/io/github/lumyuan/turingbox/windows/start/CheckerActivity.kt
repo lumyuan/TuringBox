@@ -270,14 +270,14 @@ private fun checkFileWrite(activity: ComponentActivity, next: Runnable) {
  * 启动完成
  */
 private fun startToFinish(componentActivity: ComponentActivity, textState: MutableState<String>) {
-    textState.value = "启动完成！"
     CoroutineScope(Dispatchers.IO).launch {
-        //BatteryState(TuringBox.application).registerReceiver()
+        textState.value = "启动完成！"
+        BatteryState(TuringBox.application).registerReceiver()
+        textState.value = componentActivity.getString(R.string.text_permission_pass)
+        val intent = Intent(componentActivity, MainActivity::class.java)
+        componentActivity.startActivity(intent)
+        componentActivity.finish()
     }
-    textState.value = componentActivity.getString(R.string.text_permission_pass)
-    val intent = Intent(componentActivity, MainActivity::class.java)
-    componentActivity.startActivity(intent)
-    componentActivity.finish()
 }
 
 @Composable

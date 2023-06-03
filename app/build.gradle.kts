@@ -35,10 +35,11 @@ android {
 
         val appVersionCode = dateFormat.format(Date()).trim().toLong()
 
-        @SuppressLint("ExpiredTargetSdkVersion")
-        targetSdk = 28
+//        @SuppressLint("ExpiredTargetSdkVersion")
+        @SuppressLint("EditedTargetSdkVersion")
+        targetSdk = 33
         versionCode = appVersionCode.toInt()
-        versionName = "0.0.2-$appVersionCode"
+        versionName = "0.0.3-$appVersionCode"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
