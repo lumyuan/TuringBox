@@ -28,7 +28,7 @@ import io.github.lumyuan.turingbox.windows.main.GpuState
 fun GpuCard(gpuState: MutableState<GpuState>) {
     Card(
         modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
+            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 4.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp)
     ) {

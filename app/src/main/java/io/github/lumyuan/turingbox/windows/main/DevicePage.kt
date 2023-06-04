@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.opengl.GLSurfaceView
 import android.os.BatteryManager
+import android.os.SystemClock
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -46,19 +47,23 @@ import io.github.lumyuan.turingbox.R
 import io.github.lumyuan.turingbox.common.basic.AppInfoLoader
 import io.github.lumyuan.turingbox.common.device.GpuInfoUtil
 import io.github.lumyuan.turingbox.common.model.CpuCoreInfo
+import io.github.lumyuan.turingbox.common.shell.BatteryUtils
 import io.github.lumyuan.turingbox.common.shell.CpuFrequencyUtils
 import io.github.lumyuan.turingbox.common.shell.CpuLoadUtils
 import io.github.lumyuan.turingbox.common.shell.GpuUtils
 import io.github.lumyuan.turingbox.common.shell.KeepShellPublic
+import io.github.lumyuan.turingbox.common.shell.KernelProp
 import io.github.lumyuan.turingbox.common.shell.MemoryUtils
 import io.github.lumyuan.turingbox.common.shell.ProcessInfo
 import io.github.lumyuan.turingbox.common.shell.ProcessUtils
+import io.github.lumyuan.turingbox.common.shell.RootFile
 import io.github.lumyuan.turingbox.ui.compose.launchTimerJob
 import io.github.lumyuan.turingbox.ui.widget.CpuChart
 import io.github.lumyuan.turingbox.windows.main.device.CpuFreqCard
 import io.github.lumyuan.turingbox.windows.main.device.GpuCard
 import io.github.lumyuan.turingbox.windows.main.device.MemoryCard
 import io.github.lumyuan.turingbox.windows.main.device.OtherInfoCard
+import io.github.lumyuan.turingbox.windows.main.device.OtherInfoState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -73,6 +78,7 @@ private fun PreviewDevicePage() {
 private val memoryUtils by lazy { MemoryUtils() }
 private val cpuLoadUtils by lazy { CpuLoadUtils() }
 private val cpuFrequencyUtil by lazy { CpuFrequencyUtils() }
+private val batteryUtils by lazy { BatteryUtils() }
 private lateinit var batteryManager: BatteryManager
 
 private lateinit var pm: PackageManager
@@ -118,6 +124,14 @@ fun DevicePage() {
         mutableStateOf(ArrayList<ProcessInfo>())
     }
 
+    val otherInfoState = remember {
+        mutableStateOf(OtherInfoState(0f, 0, 0f, 0f, ""))
+    }
+
+    val ioState = remember {
+        mutableStateOf(1000)
+    }
+
     val context = LocalContext.current as ComponentActivity
 
     //GL渲染
@@ -152,13 +166,13 @@ fun DevicePage() {
     ) {
         LaunchedEffect(this) {
             launchTimerJob(Dispatchers.IO, 1500) {
-                updateInfo(memoryState, ramPercentage, swapPercentage, gpuStateMutableState, cpuState, processState)
+                updateInfo(memoryState, ramPercentage, swapPercentage, gpuStateMutableState, cpuState, processState, otherInfoState, ioState)
             }
         }
         MemoryCard(memoryState, ramPercentage, swapPercentage)
         GpuCard(gpuStateMutableState)
         CpuFreqCard(cpuState, processState)
-        OtherInfoCard()
+        OtherInfoCard(otherInfoState, ioState)
     }
 }
 
@@ -168,7 +182,9 @@ private suspend fun updateInfo(
     swapPercentage: MutableState<Float>,
     gpuStateMutableState: MutableState<GpuState>,
     cpuState: MutableState<CpuState>,
-    processState: MutableState<ArrayList<ProcessInfo>>
+    processState: MutableState<ArrayList<ProcessInfo>>,
+    otherInfoState: MutableState<OtherInfoState>,
+    ioState: MutableState<Int>
 ) {
     try {
         val info = ActivityManager.MemoryInfo()
@@ -297,9 +313,74 @@ private suspend fun updateInfo(
             val filterAppList = filterAppList(processList)
             processState.value = filterAppList
         }
+
+        val bms = "/sys/class/power_supply/bms/uevent"
+        val battery = "/sys/class/power_supply/battery/uevent"
+        val path = (if (RootFile.fileExists(bms)) {
+            bms
+        } else if (RootFile.fileExists(battery)) {
+            battery
+        } else {
+            ""
+        })
+        if (path.isNotEmpty()) {
+            val batteryInfos = KernelProp.getProp(path)
+            val infos =
+                batteryInfos.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            var io = 0
+            var level = 0
+            var voltage = 0f
+            for (item in infos) {
+                try {
+                    if (item.startsWith("POWER_SUPPLY_VOLTAGE_NOW=")) {
+                        val keyword = "POWER_SUPPLY_VOLTAGE_NOW="
+                        voltage = str2voltage(item.substring(keyword.length, item.length), "").toFloat()
+                    }else if (item.startsWith("POWER_SUPPLY_CURRENT_NOW=")) {
+                        val keyword = "POWER_SUPPLY_CURRENT_NOW="
+                        val substring = item.substring(keyword.length, item.length)
+                        io = substring.toInt() / ioState.value
+                        continue
+                    }else if (item.startsWith("POWER_SUPPLY_CAPACITY=")) {
+                        val keyword = "POWER_SUPPLY_CAPACITY="
+                        level = item.substring(keyword.length, item.length).toInt()
+                    }
+                }catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            val power = (voltage * io * 100).toInt() / 100f / 1000f * -1f
+            otherInfoState.value = OtherInfoState(
+                power = power,
+                level,
+                voltage,
+                BatteryUtils.getBatteryTemperature().temperature,
+                elapsedRealtimeStr()
+            )
+        }
+
     } catch (e: Exception) {
         e.printStackTrace()
     }
+}
+
+private fun elapsedRealtimeStr(): String {
+    val timer = SystemClock.elapsedRealtime() / 1000
+    return String.format("%02d:%02d:%02d", timer / 3600, timer % 3600 / 60, timer % 60)
+}
+
+
+private fun str2voltage(str: String, tag: String = "v"): String {
+    val value = str.substring(0, if (str.length > 4) 4 else str.length).toDouble()
+
+    return (if (value > 3000) {
+        value / 1000
+    } else if (value > 300) {
+        value / 100
+    } else if (value > 30) {
+        value / 10
+    } else {
+        value
+    }).toString() + tag
 }
 
 @Stable

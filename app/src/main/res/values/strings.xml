@@ -518,4 +518,6 @@
     <string name="please_arrow_danger">请先同意协议</string>
     <string name="text_gpu">GPU</string>
     <string name="text_gpu_used">负载：%d%s</string>
+    <string name="view_to_websit">访问TB官网</string>
+    <string name="text_system_running_time">已开机</string>
 </resources>
