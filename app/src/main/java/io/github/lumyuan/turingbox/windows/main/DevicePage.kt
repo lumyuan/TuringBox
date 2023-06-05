@@ -350,7 +350,7 @@ private suspend fun updateInfo(
             }
             val power = (voltage * io * 100).toInt() / 100f / 1000f * -1f
             otherInfoState.value = OtherInfoState(
-                power = power,
+                power,
                 level,
                 voltage,
                 BatteryUtils.getBatteryTemperature().temperature,

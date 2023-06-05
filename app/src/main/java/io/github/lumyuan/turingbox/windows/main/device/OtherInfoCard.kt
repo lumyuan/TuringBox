@@ -2,6 +2,7 @@ package io.github.lumyuan.turingbox.windows.main.device
 
 import android.os.Build
 import androidx.activity.ComponentActivity
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,25 +33,61 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.lumyuan.turingbox.R
 import io.github.lumyuan.turingbox.common.basic.startBrowser
 
-@Stable
-data class OtherInfoState(val power: Float, val capacity: Int, val level: Float, val temperature: Float, val elapsedRealtime: String)
+@Preview
+@Composable
+fun PreviewLeftCard() {
+    val state = remember {
+        mutableStateOf(OtherInfoState(0f, 0, 0f, 0f, "00:00:00"))
+    }
+    val ioState = remember {
+        mutableStateOf(1000)
+    }
+    Row {
+        LeftCard(otherInfoState = state, ioState = ioState, isShow = true)
+    }
+}
 
+@Stable
+data class OtherInfoState(
+    val power: Float,
+    val capacity: Int,
+    val level: Float,
+    val temperature: Float,
+    val elapsedRealtime: String
+)
+
+/**
+ * 其他信息卡片
+ */
 @Composable
 fun OtherInfoCard(otherInfoState: MutableState<OtherInfoState>, ioState: MutableState<Int>) {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        LeftCard(otherInfoState)
-        RightCard(otherInfoState)
+        val isShow by remember {
+            derivedStateOf {
+                otherInfoState.value.elapsedRealtime.isNotBlank()
+            }
+        }
+        LeftCard(otherInfoState, ioState, isShow)
+        RightCard(otherInfoState, isShow)
     }
 }
 
+/**
+ * 左边的卡片
+ */
 @Composable
-fun RowScope.LeftCard(otherInfoState: MutableState<OtherInfoState>) {
+fun RowScope.LeftCard(
+    otherInfoState: MutableState<OtherInfoState>,
+    ioState: MutableState<Int>,
+    isShow: Boolean
+) {
     Card(
         modifier = Modifier
             .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 16.dp)
@@ -57,15 +98,19 @@ fun RowScope.LeftCard(otherInfoState: MutableState<OtherInfoState>) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            BatteryPower(otherInfoState)
-            BatteryStatus(otherInfoState)
-            BatteryThermal(otherInfoState)
+            AnimatedVisibility(visible = isShow) {
+                Column {
+                    BatteryPower(otherInfoState, ioState)
+                    BatteryStatus(otherInfoState)
+                    BatteryThermal(otherInfoState)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun BatteryPower(otherInfoState: MutableState<OtherInfoState>) {
+fun BatteryPower(otherInfoState: MutableState<OtherInfoState>, ioState: MutableState<Int>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,7 +181,7 @@ fun BatteryStatus(otherInfoState: MutableState<OtherInfoState>) {
                     in 0 until 25 -> R.drawable.icon_battery_1
                     in 25 until 50 -> R.drawable.icon_battery_2
                     in 50 until 75 -> R.drawable.icon_battery_3
-                    in 75 .. 100 -> R.drawable.icon_battery_4
+                    in 75..100 -> R.drawable.icon_battery_4
                     else -> R.drawable.icon_battery_4
                 }
             ),
@@ -191,7 +236,7 @@ fun BatteryThermal(otherInfoState: MutableState<OtherInfoState>) {
 }
 
 @Composable
-fun RowScope.RightCard(otherInfoState: MutableState<OtherInfoState>) {
+fun RowScope.RightCard(otherInfoState: MutableState<OtherInfoState>, isShow: Boolean) {
     Card(
         modifier = Modifier
             .padding(start = 4.dp, end = 16.dp, top = 4.dp, bottom = 16.dp)
@@ -203,9 +248,13 @@ fun RowScope.RightCard(otherInfoState: MutableState<OtherInfoState>) {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            AndroidVersion()
-            RunningTime(otherInfoState)
-            TuringBoxWebsite()
+            AnimatedVisibility(visible = isShow) {
+               Column {
+                   AndroidVersion()
+                   RunningTime(otherInfoState)
+                   TuringBoxWebsite()
+               }
+            }
         }
     }
 }
@@ -261,7 +310,11 @@ fun RunningTime(otherInfoState: MutableState<OtherInfoState>) {
                 .alpha(.6f)
         )
         Text(
-            text = String.format("%s %s", stringResource(id = R.string.text_system_running_time), otherInfoState.value.elapsedRealtime),
+            text = String.format(
+                "%s %s",
+                stringResource(id = R.string.text_system_running_time),
+                otherInfoState.value.elapsedRealtime
+            ),
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .padding(start = 12.dp)

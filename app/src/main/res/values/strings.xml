@@ -520,4 +520,22 @@
     <string name="text_gpu_used">负载：%d%s</string>
     <string name="view_to_websit">访问TB官网</string>
     <string name="text_system_running_time">已开机</string>
+
+    <string name="definite">确定</string>
+    <string name="text_theme">主题颜色</string>
+    <string name="theme_default">豆沙绿</string>
+    <string name="theme_dynamic_color">Material You</string>
+    <string name="theme_green">苍翠绿</string>
+    <string name="theme_red">中国红</string>
+    <string name="theme_pink">少女粉</string>
+    <string name="theme_blue">冰封蓝</string>
+    <string name="theme_cyan">雨后天青</string>
+    <string name="theme_orange">清新橙</string>
+    <string name="theme_purple">神秘紫</string>
+    <string name="theme_brown">古色棕</string>
+    <string name="theme_gray">低调灰</string>
+    <string name="text_theme_drak">深色模式</string>
+    <string name="theme_light">白天</string>
+    <string name="theme_night">夜间</string>
+    <string name="theme_system">跟随系统</string>
 </resources>

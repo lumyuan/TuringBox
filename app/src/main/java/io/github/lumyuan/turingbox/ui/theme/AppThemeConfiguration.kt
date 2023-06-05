@@ -19,10 +19,8 @@ import androidx.compose.ui.platform.LocalContext
  * 默认主题
  */
 @Composable
-fun defaultTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun defaultTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = bean_green_seed,
             onPrimary = bean_green_md_theme_light_onPrimary,
@@ -93,22 +91,19 @@ fun defaultTheme(
  */
 @Composable
 fun dynamicColorTheme(
-    darkTheme: Boolean,
     context: Context = LocalContext.current
 ): ColorScheme =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        if (isDark()) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     else
-        defaultTheme(darkTheme)
+        defaultTheme()
 
 /**
  * 绿色
  */
 @Composable
-fun greenTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun greenTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = green_seed,
             onPrimary = green_md_theme_light_onPrimary,
@@ -177,10 +172,8 @@ fun greenTheme(
  * 红色
  */
 @Composable
-fun redTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun redTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = red_seed,
             onPrimary = red_md_theme_light_onPrimary,
@@ -249,10 +242,8 @@ fun redTheme(
  * 粉色
  */
 @Composable
-fun pinkTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun pinkTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = pink_seed,
             onPrimary = pink_md_theme_light_onPrimary,
@@ -321,10 +312,8 @@ fun pinkTheme(
  * 蓝色
  */
 @Composable
-fun blueTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun blueTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = blue_seed,
             onPrimary = blue_md_theme_light_onPrimary,
@@ -393,10 +382,8 @@ fun blueTheme(
  * 青色
  */
 @Composable
-fun cyanTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun cyanTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = cyan_seed,
             onPrimary = cyan_md_theme_light_onPrimary,
@@ -466,10 +453,8 @@ fun cyanTheme(
  * 橙色
  */
 @Composable
-fun orangeTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun orangeTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = orange_seed,
             onPrimary = orange_md_theme_light_onPrimary,
@@ -538,10 +523,8 @@ fun orangeTheme(
  * 紫色
  */
 @Composable
-fun purpleTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun purpleTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = purple_seed,
             onPrimary = purple_md_theme_light_onPrimary,
@@ -610,10 +593,8 @@ fun purpleTheme(
  * 棕色
  */
 @Composable
-fun brownTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun brownTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = brown_seed,
             onPrimary = brown_md_theme_light_onPrimary,
@@ -682,10 +663,8 @@ fun brownTheme(
  * 灰色
  */
 @Composable
-fun grayTheme(
-    darkTheme: Boolean
-): ColorScheme =
-    if (!darkTheme)
+fun grayTheme(): ColorScheme =
+    if (!isDark())
         lightColorScheme(
             primary = gray_seed,
             onPrimary = gray_md_theme_light_onPrimary,
@@ -756,6 +735,7 @@ fun grayTheme(
  */
 @Composable
 fun themeAnimation(targetTheme: ColorScheme): ColorScheme {
+    println("themeAnimation")
     //动画时长
     val durationMillis = 600
     //插值器

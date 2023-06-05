@@ -14,7 +14,7 @@ constraint = "1.0.1"
 androidxNavigation = "2.5.3"
 androidxComposeMaterial3 = "1.1.0-alpha06"
 material = "1.8.0"
-
+gsonVersion = "2.9.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -39,6 +39,8 @@ immersionbar-ui-ktx = { group = "com.geyifeng.immersionbar", name = "immersionba
 android-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "android-appcompat" }
 constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraint" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+gson = { group = "com.google.code.gson" , name = "gson", version.ref = "gsonVersion" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -145,4 +145,6 @@ dependencies {
     implementation(libs.immersionbar.ui.ktx)
 
     implementation(project(":TuringBoxJNI"))
+
+    implementation(libs.gson)
 }
